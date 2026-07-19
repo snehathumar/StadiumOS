@@ -25,3 +25,5 @@ class EventCategory(str, Enum):
     MEDICAL = "MEDICAL"
     IOT = "IOT"
     NETWORK = "NETWORK"
+    SECURITY = "SECURITY"
+    THREAT = "THREAT"
