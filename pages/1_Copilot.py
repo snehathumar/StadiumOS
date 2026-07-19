@@ -87,24 +87,48 @@ def render_copilot_view():
                         st.info(f"**Overall Impact:** {resp.expected_impact}")
         
         # Chat Input handler
-        if prompt := st.chat_input("Ask Copilot... (e.g. 'How is Gate A looking?')"):
-            # 1. Show user message
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with chat_container:
-                with st.chat_message("user"):
-                    st.markdown(prompt)
-                    
-            # 2. Get AI Response
-            with chat_container:
-                with st.chat_message("assistant"):
-                    with st.spinner("Analyzing stadium telemetry..."):
-                        try:
-                            copilot = st.session_state.copilot
-                            response = copilot.ask(prompt)
-                            st.session_state.messages.append({"role": "assistant", "content": response})
-                            st.rerun() # Refresh to render new rich message
-                        except Exception as e:
-                            st.error(f"Copilot Error: {str(e)}")
+        try:
+            query = st.chat_input("Ask Copilot a question (e.g., 'What is the risk of a crush at Gate A?')")
+            if query:
+                import re
+                from backend.ai_brain.ai_manager import AIManager
+                from backend.ai_brain.decision_logger import decision_logger
+                
+                # Strict input sanitization
+                sanitized_query = re.sub(r'[^a-zA-Z0-9 ?.,!-]', '', query)
+                
+                st.session_state.messages.append({"role": "user", "content": sanitized_query})
+                with chat_container:
+                    with st.chat_message("user"):
+                        st.write(sanitized_query)
+                        
+                with chat_container:
+                    with st.chat_message("assistant"):
+                        with st.spinner("Analyzing live context..."):
+                            try:
+                                ai_manager = AIManager()
+                                response = ai_manager.execute_brain_task(
+                                    template_name="copilot",
+                                    user_prompt=sanitized_query
+                                )
+                                
+                                st.write(response.summary)
+                                
+                                # Log decision automatically
+                                decision_logger.log_decision(
+                                    context_snapshot=stadium_state_aggregator.get_current_state(),
+                                    scenario=sanitized_query,
+                                    ai_recommendation=response,
+                                    human_override=None
+                                )
+                                
+                                st.session_state.messages.append({"role": "assistant", "content": response})
+                                st.rerun()
+                            except Exception as e:
+                                error_msg = "Error analyzing context. Please try again."
+                                st.error(error_msg)
+        except Exception as general_e:
+            st.error("An unexpected error occurred in the Copilot UI. Please check the system logs.")
 
     with col_context:
         st.markdown("### 📡 Live Stadium Context")

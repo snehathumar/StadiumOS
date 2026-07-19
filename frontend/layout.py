@@ -14,8 +14,10 @@ def render_wireframe_dashboard(state_data: Dict[str, Any], events: List[StadiumE
     # ------------------------------------------------------------
     # Row 1: Header
     # ------------------------------------------------------------
+    st.markdown('<div role="region" aria-label="StadiumOS Main Dashboard" style="padding-top:1rem;">', unsafe_allow_html=True)
     st.header("🏟 StadiumOS", anchor=False)
     st.caption("One AI. Every Stadium Decision.")
+    st.markdown('</div>', unsafe_allow_html=True)
     st.markdown("---")
     
     # ------------------------------------------------------------

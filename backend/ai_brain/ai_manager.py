@@ -24,7 +24,9 @@ class GeminiProvider(IAIProvider):
         self.model_name = model_name
         
         import os
-        resolved_key = api_key or os.environ.get("GEMINI_API_KEY")
+        from dotenv import load_dotenv
+        load_dotenv()
+        resolved_key = api_key or os.getenv("GEMINI_API_KEY")
         if not resolved_key:
             try:
                 import streamlit as st
