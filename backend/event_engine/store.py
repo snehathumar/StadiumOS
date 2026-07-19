@@ -21,6 +21,14 @@ class EventStore(Subscriber):
         """Callback to add events to the buffer."""
         self._buffer.append(event)
         
+    def add_event(self, event: StadiumEvent) -> None:
+        """Alias to add an event directly to the store."""
+        self._buffer.append(event)
+        
+    def clear(self) -> None:
+        """Clears all events from the history buffer."""
+        self._buffer.clear()
+        
     def get_recent_events(self, limit: int = 100) -> List[StadiumEvent]:
         """Returns the most recent N events."""
         events = list(self._buffer)

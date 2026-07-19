@@ -104,6 +104,6 @@ class DemoSimulator:
     @staticmethod
     def reset():
         """Clears events (state reset is harder, but this suffices for demo)."""
-        event_store.events.clear()
+        event_store.clear()
         
 demo_simulator = DemoSimulator()
