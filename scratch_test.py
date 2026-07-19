@@ -1,17 +1,19 @@
-import sys
 import os
-
-# mock streamlit secrets logic
+import sys
+# Mock streamlit secrets
 import streamlit as st
 st.secrets = {}
 
-from backend.copilot.copilot import StadiumCopilot
+from backend.event_engine.demo_simulator import demo_simulator
 
-try:
-    copilot = StadiumCopilot()
-    response = copilot.ask("What is the risk of a crush at Gate A?")
-    print("SUCCESS!")
-    print(response)
-except Exception as e:
-    import traceback
-    traceback.print_exc()
+print("Testing Scenario 1...")
+demo_simulator.inject_scenario_1_overcrowding()
+print("Scenario 1 Success!")
+
+print("Testing Scenario 2...")
+demo_simulator.inject_scenario_2_security_threat()
+print("Scenario 2 Success!")
+
+print("Testing Scenario 3...")
+demo_simulator.inject_scenario_3_predictive_simulation()
+print("Scenario 3 Success!")

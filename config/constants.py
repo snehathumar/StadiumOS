@@ -27,3 +27,4 @@ class EventCategory(str, Enum):
     NETWORK = "NETWORK"
     SECURITY = "SECURITY"
     THREAT = "THREAT"
+    SYSTEM = "SYSTEM"
