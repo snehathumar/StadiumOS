@@ -3,7 +3,7 @@ from backend.simulation.simulation_service import simulation_service
 from backend.simulation.models import SimulationResult
 
 def render_simulation_view():
-    st.markdown("<h2 style='color: #ffffff;'>🔮 Predictive Simulation Engine</h2>", unsafe_allow_html=True)
+    st.header("🔮 Predictive Simulation Engine", anchor=False)
     st.markdown("Run hypothetical scenarios to predict future impact and generate preventive strategies.")
     st.markdown("---")
     
@@ -12,7 +12,7 @@ def render_simulation_view():
     with col_input:
         query = st.text_input("Describe the hypothetical scenario:", placeholder="e.g. What happens if 20,000 more fans arrive?")
     with col_btn:
-        st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
+        st.write("")
         run_sim = st.button("🚀 Run Simulation", type="primary")
         
     if run_sim and query:

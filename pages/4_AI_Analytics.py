@@ -4,7 +4,7 @@ from backend.agents.evaluation.learning_memory import learning_memory
 from backend.agents.evaluation.decision_logger import decision_logger
 
 def render_analytics_dashboard():
-    st.markdown("<h2 style='color: #ffffff;'>🧠 AI Evaluation & Learning</h2>", unsafe_allow_html=True)
+    st.header("🧠 AI Evaluation & Learning", anchor=False)
     st.markdown("Monitor AI confidence drift, evaluate operational decisions, and inspect the continuous learning memory.")
     st.markdown("---")
     

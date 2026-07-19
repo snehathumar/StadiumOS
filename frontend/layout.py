@@ -14,8 +14,8 @@ def render_wireframe_dashboard(state_data: Dict[str, Any], events: List[StadiumE
     # ------------------------------------------------------------
     # Row 1: Header
     # ------------------------------------------------------------
-    st.markdown("<h1 style='text-align: center; color: #ffffff;'>🏟 StadiumOS</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8b949e; font-size: 1.2rem; font-weight: 500;'>One AI. Every Stadium Decision.</p>", unsafe_allow_html=True)
+    st.header("🏟 StadiumOS", anchor=False)
+    st.caption("One AI. Every Stadium Decision.")
     st.markdown("---")
     
     # ------------------------------------------------------------

@@ -6,8 +6,8 @@ def render_sidebar() -> str:
     Returns the currently selected page name.
     """
     with st.sidebar:
-        st.title("🏟️ StadiumOS")
-        st.markdown("<p style='color:#8b949e; font-size:0.8rem; margin-top:-15px;'>One AI. Every Stadium Decision.</p>", unsafe_allow_html=True)
+        st.header("🏟 StadiumOS")
+        st.caption("One AI. Every Stadium Decision.")
         st.markdown("---")
         
         if 'current_page' not in st.session_state:
@@ -22,6 +22,6 @@ def render_sidebar() -> str:
         st.button("🤖 Copilot", use_container_width=True, on_click=switch_page, args=("Copilot",))
         
         st.markdown("---")
-        st.markdown("<div style='text-align: center; color:#8b949e; font-size: 0.7rem;'>System: ONLINE</div>", unsafe_allow_html=True)
+        st.write("System: ONLINE")
             
         return st.session_state.current_page

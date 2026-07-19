@@ -44,7 +44,7 @@ def render_copilot_view():
     _render_demo_controls()
     
     # Header
-    st.markdown("<h2 style='color: #ffffff;'>🤖 StadiumOS Copilot</h2>", unsafe_allow_html=True)
+    st.header("🤖 StadiumOS Copilot", anchor=False)
     st.markdown("Your AI Operations Assistant. Ask natural language queries to evaluate live stadium context.")
     st.markdown("---")
     
@@ -108,7 +108,7 @@ def render_copilot_view():
 
     with col_context:
         st.markdown("### 📡 Live Stadium Context")
-        st.markdown("<p style='color: #8b949e; font-size: 0.9rem;'>Data streams visible to Copilot</p>", unsafe_allow_html=True)
+        st.caption("Data streams visible to Copilot")
         
         # Render a raw dump or a visual representation of current context
         snapshot = stadium_state_aggregator.get_current_state()

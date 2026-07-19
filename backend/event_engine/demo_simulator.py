@@ -48,7 +48,6 @@ class DemoSimulator:
         # 2. Inject noisy events
         for _ in range(5):
             evt = StadiumEvent(
-                event_id=f"SIM-{uuid.uuid4().hex[:6]}",
                 timestamp=DemoSimulator._now(),
                 category=EventCategory.CROWD,
                 severity=Severity.WARNING,
@@ -70,7 +69,6 @@ class DemoSimulator:
         })
         
         evt = StadiumEvent(
-            event_id=f"SIM-{uuid.uuid4().hex[:6]}",
             timestamp=DemoSimulator._now(),
             category=EventCategory.SECURITY,
             severity=Severity.CRITICAL,
@@ -92,7 +90,6 @@ class DemoSimulator:
         })
         
         evt = StadiumEvent(
-            event_id=f"SIM-{uuid.uuid4().hex[:6]}",
             timestamp=DemoSimulator._now(),
             category=EventCategory.SYSTEM,
             severity=Severity.INFO,

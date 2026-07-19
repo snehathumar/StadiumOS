@@ -11,7 +11,6 @@ def _now() -> str:
 def allocate_security(sector: str, personnel_count: int) -> Dict[str, Any]:
     """Mock tool to allocate security personnel."""
     evt = StadiumEvent(
-        event_id=f"OP-{uuid.uuid4().hex[:6]}",
         timestamp=_now(),
         category=EventCategory.SECURITY,
         severity=Severity.INFO,
@@ -37,7 +36,6 @@ def close_gate(gate_id: str) -> Dict[str, Any]:
 def notify_staff(department: str, message: str) -> Dict[str, Any]:
     """Mock tool to send notification to staff devices."""
     evt = StadiumEvent(
-        event_id=f"OP-{uuid.uuid4().hex[:6]}",
         timestamp=_now(),
         category=EventCategory.SYSTEM,
         severity=Severity.INFO,

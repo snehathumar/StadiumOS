@@ -14,7 +14,7 @@ def initialize_agentic_state():
 def render_agentic_view():
     initialize_agentic_state()
     
-    st.markdown("<h2 style='color: #ffffff;'>⚡ Agentic Operations Coordinator</h2>", unsafe_allow_html=True)
+    st.header("⚡ Agentic Operations Coordinator", anchor=False)
     st.markdown("Direct multiple AI agents to execute operational goals safely via tool calling.")
     st.markdown("---")
     
@@ -80,7 +80,7 @@ def render_agentic_view():
 
     with col_audit:
         st.markdown("### 📜 Audit Log")
-        st.markdown("<span style='color:gray; font-size: 0.8rem;'>Immutable record of all agentic operations.</span>", unsafe_allow_html=True)
+        st.caption("Immutable record of all agentic operations.")
         
         logs = audit_store.get_logs()
         if not logs:
