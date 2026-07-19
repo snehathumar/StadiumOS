@@ -3,8 +3,8 @@ import datetime
 from typing import List
 from pydantic import BaseModel
 from backend.ai_brain.ai_manager import AIManager
-from backend.ai_brain.agentic.models import ExecutionPlan, AgentTask, AgentType
-from backend.ai_brain.agentic.agents import get_agent_for_type
+from backend.agents.agentic.models import ExecutionPlan, AgentTask, AgentType
+from backend.agents.agentic.agents import get_agent_for_type
 
 class PlannerResponse(BaseModel):
     """Schema for the Planner Agent's output."""

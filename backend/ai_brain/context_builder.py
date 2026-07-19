@@ -74,7 +74,7 @@ class ContextBuilder(IContextBuilder):
         """
         Builds the unified, token-efficient JSON payload.
         """
-        snapshot = stadium_state_aggregator.get_dashboard_snapshot()
+        snapshot = stadium_state_aggregator.get_current_state()
         events = event_store.get_recent_events(limit=200)
         
         # Filter and compress events

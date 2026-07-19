@@ -1,8 +1,8 @@
 import datetime
 from typing import Dict, Any
-from backend.ai_brain.agentic.models import ExecutionPlan, AuditLogEntry
-from backend.ai_brain.agentic.tools import TOOL_REGISTRY
-from backend.ai_brain.agentic.audit import audit_store
+from backend.agents.agentic.models import ExecutionPlan, AuditLogEntry
+from backend.agents.agentic.tools import TOOL_REGISTRY
+from backend.agents.agentic.audit import audit_store
 from backend.agents.evaluation.decision_logger import decision_logger
 
 class ExecutionEngine:

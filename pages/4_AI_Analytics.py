@@ -34,7 +34,7 @@ def render_analytics_dashboard():
             st.metric("Total AI Operations", f"{metrics['total_evaluations']}")
     with col2:
         with st.container(border=True):
-            conf = metrics['confidence'] * 100
+            conf = metrics['current_confidence'] * 100
             st.metric("Internal AI Confidence", f"{conf:.1f}%")
     with col3:
         with st.container(border=True):

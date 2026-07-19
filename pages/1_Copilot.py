@@ -111,7 +111,7 @@ def render_copilot_view():
         st.markdown("<p style='color: #8b949e; font-size: 0.9rem;'>Data streams visible to Copilot</p>", unsafe_allow_html=True)
         
         # Render a raw dump or a visual representation of current context
-        snapshot = stadium_state_aggregator.get_dashboard_snapshot()
+        snapshot = stadium_state_aggregator.get_current_state()
         
         # Show Critical Subsystems
         criticals = []

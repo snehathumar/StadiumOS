@@ -1,5 +1,5 @@
 from typing import List
-from backend.ai_brain.agentic.models import AuditLogEntry
+from backend.agents.agentic.models import AuditLogEntry
 
 class AuditLogStore:
     """In-memory store for Agentic Operations audits."""

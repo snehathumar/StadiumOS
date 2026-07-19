@@ -2,8 +2,8 @@ import json
 from typing import List
 from pydantic import BaseModel, Field
 from backend.ai_brain.ai_manager import AIManager
-from backend.ai_brain.agentic.models import AgentTask, ToolCall, AgentType
-from backend.ai_brain.agentic.tools import TOOL_REGISTRY
+from backend.agents.agentic.models import AgentTask, ToolCall, AgentType
+from backend.agents.agentic.tools import TOOL_REGISTRY
 
 class AgentToolResponse(BaseModel):
     """Schema for an agent's planned tool calls."""

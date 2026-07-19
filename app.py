@@ -30,7 +30,7 @@ def main():
     st.sidebar.info("Select a module above to navigate.")
     
     # 2. Fetch Data (Dependency Inversion)
-    snapshot = stadium_state_aggregator.get_dashboard_snapshot()
+    snapshot = stadium_state_aggregator.get_current_state()
     recent_events = event_store.get_recent_events(limit=200)
     
     # 3. Route Rendering

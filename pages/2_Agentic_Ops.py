@@ -1,7 +1,7 @@
 import streamlit as st
-from backend.ai_brain.agentic.planner import PlannerAgent
-from backend.ai_brain.agentic.executor import executor_engine
-from backend.ai_brain.agentic.audit import audit_store
+from backend.agents.agentic.planner import PlannerAgent
+from backend.agents.agentic.executor import executor_engine
+from backend.agents.agentic.audit import audit_store
 
 def initialize_agentic_state():
     if 'planner' not in st.session_state:

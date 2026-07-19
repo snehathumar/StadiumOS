@@ -3,7 +3,7 @@ import datetime
 import uuid
 from typing import Dict, Any
 
-from backend.event_engine.models import StadiumEvent, SeverityLevel, EventCategory
+from backend.event_engine.models import StadiumEvent, Severity, EventCategory
 from backend.event_engine.store import event_store
 from backend.stadium_state.stadium_state import stadium_state_aggregator
 
@@ -18,15 +18,27 @@ class DemoSimulator:
         return datetime.datetime.utcnow().isoformat()
 
     @staticmethod
+    def update_subsystem(category: str, location: str, health: str, status: str, metrics: Dict[str, Any]):
+        evt = StadiumEvent(
+            source=location,
+            location=location,
+            category=EventCategory(category),
+            severity=Severity.CRITICAL if health == "CRITICAL" else Severity.WARNING,
+            description=status,
+            metrics=metrics
+        )
+        stadium_state_aggregator.update(evt)
+
+    @staticmethod
     def inject_scenario_1_overcrowding():
         """Simulates Gate A Overcrowding."""
         # 1. Update global state directly
-        stadium_state_aggregator.update_subsystem("GATE", "Gate A", "CRITICAL", "Overcrowded", {
+        DemoSimulator.update_subsystem("GATE", "Gate A", "CRITICAL", "Overcrowded", {
             "occupancy": 92,
             "queue_length": 850,
             "wait_time_mins": 18
         })
-        stadium_state_aggregator.update_subsystem("GATE", "Gate B", "GOOD", "Clear", {
+        DemoSimulator.update_subsystem("GATE", "Gate B", "GOOD", "Clear", {
             "occupancy": 35,
             "queue_length": 50,
             "wait_time_mins": 2
@@ -38,7 +50,7 @@ class DemoSimulator:
                 event_id=f"SIM-{uuid.uuid4().hex[:6]}",
                 timestamp=DemoSimulator._now(),
                 category=EventCategory.CROWD,
-                severity=SeverityLevel.WARNING,
+                severity=Severity.WARNING,
                 source="Camera-G12",
                 location="Gate A",
                 description="High density detected at Gate A entrance.",
@@ -49,7 +61,7 @@ class DemoSimulator:
     @staticmethod
     def inject_scenario_2_security_threat():
         """Simulates an active security threat at Sector C."""
-        stadium_state_aggregator.update_subsystem("SECURITY", "Sector C", "CRITICAL", "Active Incident", {
+        DemoSimulator.update_subsystem("SECURITY", "Sector C", "CRITICAL", "Active Incident", {
             "threat_type": "Unauthorized Access",
             "confidence": 0.95,
             "security_personnel_nearby": 2
@@ -59,7 +71,7 @@ class DemoSimulator:
             event_id=f"SIM-{uuid.uuid4().hex[:6]}",
             timestamp=DemoSimulator._now(),
             category=EventCategory.SECURITY,
-            severity=SeverityLevel.CRITICAL,
+            severity=Severity.CRITICAL,
             source="Turnstile-C3",
             location="Sector C",
             description="Multiple forced entry attempts detected. Barrier breached.",
@@ -70,7 +82,7 @@ class DemoSimulator:
     @staticmethod
     def inject_scenario_3_predictive_simulation():
         """Simulates a predictive pattern (post-match egress surge)."""
-        stadium_state_aggregator.update_subsystem("CROWD", "Stadium Bowl", "WARNING", "Egress Surge Imminent", {
+        DemoSimulator.update_subsystem("CROWD", "Stadium Bowl", "WARNING", "Egress Surge Imminent", {
             "match_status": "90th Minute",
             "current_bowl_occupancy": 55000,
             "predicted_corridor_density_in_5m": 0.98
@@ -80,7 +92,7 @@ class DemoSimulator:
             event_id=f"SIM-{uuid.uuid4().hex[:6]}",
             timestamp=DemoSimulator._now(),
             category=EventCategory.SYSTEM,
-            severity=SeverityLevel.INFO,
+            severity=Severity.INFO,
             source="Predictive-Engine",
             location="Stadium-Wide",
             description="Predictive model anticipates massive egress surge towards North and East transit hubs.",
