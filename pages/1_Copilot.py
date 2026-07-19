@@ -106,13 +106,8 @@ def render_copilot_view():
                     with st.chat_message("assistant"):
                         with st.spinner("Analyzing live context..."):
                             try:
-                                ai_manager = AIManager()
-                                response = ai_manager.execute_brain_task(
-                                    template_name="copilot",
-                                    user_prompt=sanitized_query
-                                )
-                                
-                                st.write(response.summary)
+                                copilot = st.session_state.copilot
+                                response = copilot.ask(sanitized_query)
                                 
                                 # Log decision automatically
                                 decision_logger.log_decision(

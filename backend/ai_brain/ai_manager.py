@@ -97,20 +97,13 @@ class AIManager:
                 if attempt == max_retries - 1:
                     # Rule 3: Robust Auto-Fallback Mechanism
                     logger.error("All AI generation attempts failed. Engaging auto-fallback.")
-                    return json.dumps({
-                        "summary": "SYSTEM FALLBACK: AI Service temporarily unavailable.",
-                        "risk_level": "WARNING",
-                        "reasoning": "Primary AI engine failed to respond. Executing local failover protocols.",
-                        "confidence": 0.50,
-                        "recommended_actions": [{"action": "Monitor situation manually", "target_system": "GLOBAL", "urgency": "MEDIUM", "rank": 1}]
-                    })
+                    raise RuntimeError("All API attempts failed")
                 time.sleep(delay)
                 delay *= 2  # Exponential backoff
                 
     def _parse_and_validate(self, raw_json: str, response_model: Type[T]) -> T:
         """Strictly parses LLM JSON output into a Pydantic object."""
         try:
-            # Clean potential markdown wrapping if the LLM ignores instructions
             cleaned = raw_json.strip()
             if cleaned.startswith("```json"):
                 cleaned = cleaned[7:]
@@ -119,25 +112,15 @@ class AIManager:
                 
             data = json.loads(cleaned)
             return response_model(**data)
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to decode LLM JSON: {e}\nRaw output: {raw_json}")
-            raise ValueError("LLM returned malformed JSON.")
-        except ValidationError as e:
-            logger.error(f"LLM JSON failed schema validation: {e}")
-            raise ValueError("LLM JSON did not match strict Pydantic schema.")
+        except Exception as e:
+            logger.error(f"Failed to parse or validate JSON: {e}")
+            raise ValueError(f"LLM returned invalid response: {e}")
 
     def execute_brain_task(self, template_name: str, response_model: Type[T] = StadiumBrainResponse, **kwargs) -> T:
-        """
-        End-to-end generic flow enforcing strict anti-hallucination rules.
-        Supports dynamic Pydantic schema injection.
-        """
-        # 1. Base Context (always retrieved to prevent inventing data)
-        # We allow kwargs to override context if needed, but default to global state
         if "context" not in kwargs:
             context_dict = self.context_builder.build_context()
             kwargs["context"] = json.dumps(context_dict, indent=2)
         
-        # 2. Template Extraction
         target_schema = response_model.model_json_schema()
         
         prompts = self.prompt_manager.get_prompt(
@@ -146,19 +129,39 @@ class AIManager:
             **kwargs
         )
         
-        # 3. Apply Global Security & Accuracy Rules
         anti_hallucination_rules = (
-            "\nCRITICAL OPERATIONAL RULES:"
-            "\n1. You are an experienced Stadium Operations Commander. Never answer casually."
-            "\n2. Explain reasoning clearly step-by-step."
-            "\n3. AVOID HALLUCINATIONS completely. NEVER invent sensor data."
-            "\n4. If information is insufficient, explicitly state it in your reasoning and lower your confidence score."
-            "\n5. If multiple actions exist, you MUST rank them sequentially starting at 1 based on urgency."
-            "\n6. You must strictly adhere to the provided JSON schema."
-            "\n7. YOU DO NOT DETECT THREATS. You only explain threats that have already been verified by the Rule Engine."
+            "\nCRITICAL OPERATIONAL RULES:\n1. Strict adherence to schema."
         )
         combined_system = f"{prompts['system']}\n\n{prompts['developer']}\n{anti_hallucination_rules}"
         
-        # 4. Execute & Validate
-        raw_output = self._execute_with_retry(combined_system, prompts["user"])
-        return self._parse_and_validate(raw_output, response_model)
+        try:
+            raw_output = self._execute_with_retry(combined_system, prompts["user"])
+            return self._parse_and_validate(raw_output, response_model)
+        except Exception as e:
+            logger.error(f"Fallback triggered due to error: {e}")
+            if response_model.__name__ == "CopilotResponse":
+                return response_model(
+                    situation_summary="SYSTEM FALLBACK: AI Service temporarily unavailable.",
+                    risk_level="WARNING",
+                    root_cause="API Offline",
+                    recommended_actions=[],
+                    expected_impact="Manual monitoring required"
+                )
+            elif response_model.__name__ == "SimulationResult":
+                # Mocking nested models for simulation fallback
+                return response_model(
+                    scenario=kwargs.get("query", "Fallback"),
+                    current_state_summary="API Unavailable",
+                    predicted_state={"attendance": 0, "key_metrics": {}},
+                    risk={"overall_risk": "WARNING", "crowd_risk": "WARNING", "security_risk": "WARNING", "operational_risk": "WARNING", "medical_risk": "WARNING"},
+                    alternative_plans=[],
+                    reasoning="API Offline"
+                )
+            else:
+                return response_model(
+                    summary="SYSTEM FALLBACK: AI Service temporarily unavailable.",
+                    risk_level="WARNING",
+                    recommended_actions=[],
+                    reasoning="API Offline",
+                    confidence=0.5
+                )

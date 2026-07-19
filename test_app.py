@@ -92,5 +92,8 @@ def test_ai_manager_malformed():
     
     manager = AIManager(provider=BadProvider())
     manager.prompt_manager.get_prompt = MagicMock(return_value={"system": "", "developer": "", "user": ""})
-    with pytest.raises(ValueError, match="LLM returned malformed JSON."):
-        manager.execute_brain_task("copilot")
+    
+    # Should gracefully return a fallback response rather than crashing
+    response = manager.execute_brain_task("copilot")
+    assert response.risk_level == "WARNING"
+    assert "SYSTEM FALLBACK" in response.summary
