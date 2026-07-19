@@ -1,7 +1,7 @@
 from typing import Dict, Any, List
 from backend.stadium_state.stadium_state import stadium_state_aggregator
 from backend.event_engine.store import event_store
-from backend.event_engine.models import StadiumEvent, EventCategory, Severity
+from backend.event_engine.models import StadiumEvent, EventCategory, Severity, Priority
 import datetime
 import uuid
 
@@ -15,10 +15,11 @@ def allocate_security(sector: str, personnel_count: int) -> Dict[str, Any]:
         timestamp=_now(),
         category=EventCategory.SECURITY,
         severity=Severity.INFO,
+        priority=Priority.MEDIUM,
         source="Agentic-Ops",
         location=sector,
         description=f"Allocated {personnel_count} security personnel to {sector}.",
-        raw_payload={"personnel_count": personnel_count}
+        metrics={"personnel_count": personnel_count}
     )
     event_store.add_event(evt)
     return {"status": "SUCCESS", "action": "allocate_security", "sector": sector, "count": personnel_count}
@@ -40,10 +41,11 @@ def notify_staff(department: str, message: str) -> Dict[str, Any]:
         timestamp=_now(),
         category=EventCategory.SYSTEM,
         severity=Severity.INFO,
+        priority=Priority.LOW,
         source="Agentic-Ops",
         location="Stadium-Wide",
         description=f"Notification to {department}: {message}",
-        raw_payload={"department": department, "message": message}
+        metrics={"department": department, "message": message}
     )
     event_store.add_event(evt)
     return {"status": "SUCCESS", "action": "notify_staff", "department": department}

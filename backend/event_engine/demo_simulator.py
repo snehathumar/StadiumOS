@@ -3,7 +3,7 @@ import datetime
 import uuid
 from typing import Dict, Any
 
-from backend.event_engine.models import StadiumEvent, Severity, EventCategory
+from backend.event_engine.models import StadiumEvent, Severity, EventCategory, Priority
 from backend.event_engine.store import event_store
 from backend.stadium_state.stadium_state import stadium_state_aggregator
 
@@ -24,6 +24,7 @@ class DemoSimulator:
             location=location,
             category=EventCategory(category),
             severity=Severity.CRITICAL if health == "CRITICAL" else Severity.WARNING,
+            priority=Priority.HIGH if health == "CRITICAL" else Priority.MEDIUM,
             description=status,
             metrics=metrics
         )
@@ -51,10 +52,11 @@ class DemoSimulator:
                 timestamp=DemoSimulator._now(),
                 category=EventCategory.CROWD,
                 severity=Severity.WARNING,
+                priority=Priority.MEDIUM,
                 source="Camera-G12",
                 location="Gate A",
                 description="High density detected at Gate A entrance.",
-                raw_payload={"density": 0.85}
+                metrics={"density": 0.85}
             )
             event_store.add_event(evt)
             
@@ -72,10 +74,11 @@ class DemoSimulator:
             timestamp=DemoSimulator._now(),
             category=EventCategory.SECURITY,
             severity=Severity.CRITICAL,
+            priority=Priority.HIGH,
             source="Turnstile-C3",
             location="Sector C",
             description="Multiple forced entry attempts detected. Barrier breached.",
-            raw_payload={"breach": True, "count": 4}
+            metrics={"breach": True, "count": 4}
         )
         event_store.add_event(evt)
 
@@ -93,10 +96,11 @@ class DemoSimulator:
             timestamp=DemoSimulator._now(),
             category=EventCategory.SYSTEM,
             severity=Severity.INFO,
+            priority=Priority.LOW,
             source="Predictive-Engine",
             location="Stadium-Wide",
             description="Predictive model anticipates massive egress surge towards North and East transit hubs.",
-            raw_payload={"prediction_confidence": 0.99, "target_hubs": ["North", "East"]}
+            metrics={"prediction_confidence": 0.99, "target_hubs": ["North", "East"]}
         )
         event_store.add_event(evt)
         
