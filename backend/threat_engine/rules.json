@@ -1,0 +1,113 @@
+[
+  {
+    "rule_id": "RULE_CROWD_01",
+    "name": "Severe Crowd Congestion",
+    "enabled": true,
+    "category": "CROWD",
+    "conditions": [
+      { "field": "category.value", "operator": "==", "value": "CROWD" },
+      { "field": "severity.value", "operator": "in", "value": ["WARNING", "CRITICAL"] }
+    ],
+    "threshold_count": 3,
+    "threshold_window_sec": 300,
+    "severity": "HIGH",
+    "priority": 1,
+    "generated_threat_name": "Crowd Crush Risk",
+    "recommended_action": "Dispatch crowd control team and redistribute gate flow."
+  },
+  {
+    "rule_id": "RULE_TICKET_01",
+    "name": "Duplicate Ticket Velocity",
+    "enabled": true,
+    "category": "TICKET",
+    "conditions": [
+      { "field": "category.value", "operator": "==", "value": "TICKET" },
+      { "field": "description", "operator": "contains", "value": "Duplicate" }
+    ],
+    "threshold_count": 5,
+    "threshold_window_sec": 60,
+    "severity": "CRITICAL",
+    "priority": 1,
+    "generated_threat_name": "Ticket Fraud Ring",
+    "recommended_action": "Lock turnstiles locally and request manual verification."
+  },
+  {
+    "rule_id": "RULE_MED_01",
+    "name": "Cluster Medical Emergency",
+    "enabled": true,
+    "category": "MEDICAL",
+    "conditions": [
+      { "field": "category.value", "operator": "==", "value": "MEDICAL" }
+    ],
+    "threshold_count": 2,
+    "threshold_window_sec": 120,
+    "severity": "CRITICAL",
+    "priority": 1,
+    "generated_threat_name": "Mass Casualty Risk",
+    "recommended_action": "Deploy rapid response medics and secure egress routes."
+  },
+  {
+    "rule_id": "RULE_WEATHER_01",
+    "name": "Severe Weather Approach",
+    "enabled": true,
+    "category": "WEATHER",
+    "conditions": [
+      { "field": "category.value", "operator": "==", "value": "WEATHER" },
+      { "field": "severity.value", "operator": "==", "value": "CRITICAL" }
+    ],
+    "threshold_count": 1,
+    "threshold_window_sec": 0,
+    "severity": "CRITICAL",
+    "priority": 1,
+    "generated_threat_name": "Weather Evacuation Warning",
+    "recommended_action": "Close retractable roof or prepare partial bowl evacuation."
+  },
+  {
+    "rule_id": "RULE_NET_01",
+    "name": "Network Outage Threat",
+    "enabled": true,
+    "category": "NETWORK",
+    "conditions": [
+      { "field": "category.value", "operator": "==", "value": "NETWORK" },
+      { "field": "severity.value", "operator": "==", "value": "CRITICAL" }
+    ],
+    "threshold_count": 1,
+    "threshold_window_sec": 0,
+    "severity": "HIGH",
+    "priority": 2,
+    "generated_threat_name": "Operations Blindspot",
+    "recommended_action": "Switch to redundant cell network and dispatch IT."
+  },
+  {
+    "rule_id": "RULE_IOT_01",
+    "name": "Mass Sensor Failure",
+    "enabled": true,
+    "category": "IOT",
+    "conditions": [
+      { "field": "category.value", "operator": "==", "value": "IOT" },
+      { "field": "severity.value", "operator": "in", "value": ["WARNING", "CRITICAL"] }
+    ],
+    "threshold_count": 10,
+    "threshold_window_sec": 60,
+    "severity": "MEDIUM",
+    "priority": 3,
+    "generated_threat_name": "Sensor Grid Collapse",
+    "recommended_action": "Reboot sector IoT gateway."
+  },
+  {
+    "rule_id": "RULE_GATE_01",
+    "name": "Physical Gate Failure",
+    "enabled": true,
+    "category": "GATE",
+    "conditions": [
+      { "field": "category.value", "operator": "==", "value": "GATE" },
+      { "field": "severity.value", "operator": "==", "value": "CRITICAL" }
+    ],
+    "threshold_count": 2,
+    "threshold_window_sec": 120,
+    "severity": "HIGH",
+    "priority": 2,
+    "generated_threat_name": "Egress Bottleneck",
+    "recommended_action": "Open emergency manual gates and redirect flow."
+  }
+]
