@@ -92,7 +92,6 @@ def render_copilot_view():
             if query:
                 import re
                 from backend.ai_brain.ai_manager import AIManager
-                from backend.ai_brain.decision_logger import decision_logger
                 
                 # Strict input sanitization
                 sanitized_query = re.sub(r'[^a-zA-Z0-9 ?.,!-]', '', query)
@@ -109,21 +108,15 @@ def render_copilot_view():
                                 copilot = st.session_state.copilot
                                 response = copilot.ask(sanitized_query)
                                 
-                                # Log decision automatically
-                                decision_logger.log_decision(
-                                    context_snapshot=stadium_state_aggregator.get_current_state(),
-                                    scenario=sanitized_query,
-                                    ai_recommendation=response,
-                                    human_override=None
-                                )
-                                
                                 st.session_state.messages.append({"role": "assistant", "content": response})
                                 st.rerun()
                             except Exception as e:
                                 error_msg = "Error analyzing context. Please try again."
                                 st.error(error_msg)
         except Exception as general_e:
-            st.error("An unexpected error occurred in the Copilot UI. Please check the system logs.")
+            import traceback
+            st.error(f"An unexpected error occurred in the Copilot UI: {general_e}")
+            st.code(traceback.format_exc())
 
     with col_context:
         st.markdown("### 📡 Live Stadium Context")
