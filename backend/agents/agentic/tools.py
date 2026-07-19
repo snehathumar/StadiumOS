@@ -1,7 +1,7 @@
 from typing import Dict, Any, List
 from backend.stadium_state.stadium_state import stadium_state_aggregator
 from backend.event_engine.store import event_store
-from backend.event_engine.models import StadiumEvent, EventCategory, SeverityLevel
+from backend.event_engine.models import StadiumEvent, EventCategory, Severity
 import datetime
 import uuid
 
@@ -14,7 +14,7 @@ def allocate_security(sector: str, personnel_count: int) -> Dict[str, Any]:
         event_id=f"OP-{uuid.uuid4().hex[:6]}",
         timestamp=_now(),
         category=EventCategory.SECURITY,
-        severity=SeverityLevel.INFO,
+        severity=Severity.INFO,
         source="Agentic-Ops",
         location=sector,
         description=f"Allocated {personnel_count} security personnel to {sector}.",
@@ -39,7 +39,7 @@ def notify_staff(department: str, message: str) -> Dict[str, Any]:
         event_id=f"OP-{uuid.uuid4().hex[:6]}",
         timestamp=_now(),
         category=EventCategory.SYSTEM,
-        severity=SeverityLevel.INFO,
+        severity=Severity.INFO,
         source="Agentic-Ops",
         location="Stadium-Wide",
         description=f"Notification to {department}: {message}",
