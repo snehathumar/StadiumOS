@@ -11,3 +11,12 @@ class Settings:
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 
 settings = Settings()
+
+# AI Settings
+AI_CRITICAL_EVENT_LIMIT = 10
+AI_WARNING_EVENT_LIMIT = 15
+DEFAULT_CONFIDENCE_THRESHOLD = 0.85
+
+# System Settings
+ENABLE_AUTO_REFRESH = True
+REFRESH_INTERVAL_SECONDS = 2
