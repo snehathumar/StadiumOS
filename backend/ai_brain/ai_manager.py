@@ -20,12 +20,15 @@ class IAIProvider(ABC):
 
 class GeminiProvider(IAIProvider):
     """Concrete implementation for Google Gemini."""
-    def __init__(self, model_name: str = "gemini-2.5-flash", api_key: str = None):
-        self.model_name = model_name
-        
+    def __init__(self, model_name: str = None, api_key: str = None):
         import os
         from dotenv import load_dotenv
         load_dotenv()
+        
+        # Rule 2: ZERO Hardcoded Model Names
+        self.model_name = model_name or os.getenv("DEFAULT_MODEL", "default")
+        
+        # Rule 1: Consistent API Key Variable
         resolved_key = api_key or os.getenv("GEMINI_API_KEY")
         if not resolved_key:
             try:
@@ -56,7 +59,7 @@ class GeminiProvider(IAIProvider):
                 "risk_level": "NOMINAL",
                 "reasoning": "Simulation active. No real data analyzed.",
                 "confidence": 0.99,
-                "recommended_actions": [{"action": "Continue standard operations", "target_system": "GLOBAL", "urgency": "LOW"}]
+                "recommended_actions": [{"action": "Continue standard operations", "target_system": "GLOBAL", "urgency": "LOW", "rank": 1}]
             })
             
         try:
@@ -92,7 +95,15 @@ class AIManager:
             except Exception as e:
                 logger.warning(f"LLM request failed (attempt {attempt+1}/{max_retries}): {e}")
                 if attempt == max_retries - 1:
-                    raise
+                    # Rule 3: Robust Auto-Fallback Mechanism
+                    logger.error("All AI generation attempts failed. Engaging auto-fallback.")
+                    return json.dumps({
+                        "summary": "SYSTEM FALLBACK: AI Service temporarily unavailable.",
+                        "risk_level": "WARNING",
+                        "reasoning": "Primary AI engine failed to respond. Executing local failover protocols.",
+                        "confidence": 0.50,
+                        "recommended_actions": [{"action": "Monitor situation manually", "target_system": "GLOBAL", "urgency": "MEDIUM", "rank": 1}]
+                    })
                 time.sleep(delay)
                 delay *= 2  # Exponential backoff
                 
